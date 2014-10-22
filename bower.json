@@ -1,0 +1,20 @@
+{
+  "name": "uni",
+  "version": "0.1.0",
+  "description": "Uni",
+  "homepage": "https://github.com/krambuhl/Uni",
+  "author": "Evan Krambuhl <thekrambuhl@gmail.com>",
+  "main": "dist/uni.js",
+  "keywords": [
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "underscore": "~1.6.0"
+  }
+}
