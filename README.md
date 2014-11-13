@@ -12,8 +12,6 @@ Uni is a runner and composer of conditions.
 
 ###Uni.Compose(action, args)
 
-
-
 #####Composing sugar
 
 - `Uni.not(args)` ==> `Uni.Compose('not', args)`
