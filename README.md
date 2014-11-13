@@ -1,5 +1,38 @@
-Uni
+ Uni
 ===
+
+Uni is a runner and composer of conditions.  
+
+###Uni.Condition
+
+####Condition(value)
+####Condition(value, options)
+####Condition(function)
+####Condition(function, options)
+
+###Uni.Compose(action, args)
+
+
+
+#####Composing sugar
+
+- `Uni.not(args)` ==> `Uni.Compose('not', args)`
+- `Uni.and(args)` ==> `Uni.Compose('and', args)`
+- `Uni.or(args)` ==> `Uni.Compose('or', args)`
+
+
+
+
+
+```js
+// most basic condition
+// useful for simple conditions and basic feature detection
+var isTrueTrue = Uni.Condition(true);
+
+// a simple feature detect
+var hasClassList = Uni.Condition('classList' in docElement);
+```
+
 
 ```js
 
@@ -43,18 +76,37 @@ isGalleryExpanded.while(function() {
     // center modal
 });
 
+// most basic condition
+// useful for simple conditions and basic feature detection
+var isTrueTrue = Uni.Condition(true);
 
-var instance = Uni.Condition(true);
+// a simple feature detect
+var hasClassList = Uni.Condition('classList' in docElement);
+
+// could use for string changes as Uni Conditions are state machines.
+var currentHotWord = Uni.Condition(function() {
+    return API.get('hot-word'); 
+});
+
+
 
 // Condition Instance API
+instance.set(value)
+instance.test(args);
+
+// 
 instance.value;
 instance.prev;
+instance.first;
 instance.nth(number); // if val/prev are not enough
-instance.test(args);
+instance.history; // ==> [value, prev, nth(2), nth(3), first]
+
 instance.respond(func);
 instance.once(func);
 instance.when(func);
 instance.while(func);
+
+instance.listenTo(anotherInstance); // runs test on listened instance test
 instance.addListener(name, func);
 instance.removeListener(name, func);
 
@@ -74,7 +126,6 @@ Uni.Compose(command, args);
 Uni.not()
 Uni.and()
 Uni.or()
-Uni.equal()
 
 
 // Composition Plugin API

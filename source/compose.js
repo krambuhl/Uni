@@ -8,19 +8,18 @@ var isMediaLarge = Uni.Condition(function(width) {
 
 Uni.Compose('and', isMediaSmall, isMediaLarge);
 
+// 
+
 Uni.addComposer('and', function() {
-  var args = arguments;
-  return Uni.Condition(function() {
-    return _.every(normalizedValue                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (args));
-  })
+  return _.every(normalizeArguments(arguments));
 });
 
-function normalizedValue(args) {
+function normalizeArguments(args) {
   return _.map(args, function(condition) {
     if (condition instanceof Uni.Condition) {
       return condition.value;
     } else if (_.isFunction(condition)) {
-      return Uni.Condition(condition)
+      return Uni.Condition(condition).update().value;
     } else {
       return condition;
     }
