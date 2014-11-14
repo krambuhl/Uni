@@ -5,12 +5,39 @@ Uni is a runner and composer of conditions.
 
 ###Uni.Condition
 
-####Condition(value)
-####Condition(value, options)
-####Condition(function)
-####Condition(function, options)
+####Condition(value[, options])
 
-###Uni.Compose(action, args)
+A basic condition is useful for simple conditions and basic feature detection:
+
+```js
+var isTrueTrue = Uni.Condition(true);
+```
+
+Uni conditions are not restricted to booleans.  As state machines, they can keep track of any variable types, including strings or objects.
+
+```js
+var currentHotWord = Uni.Condition(function() {
+    return API.get('hot-word'); 
+});
+```
+
+
+####Condition(function[, options])
+
+
+```js
+var isMediaSmall = Uni.Condition(function(width) {
+    return width < 600;
+});
+
+var isMediaLarge = Uni.Condition(function(width) {
+    return width > 1280;
+});
+```
+
+###Uni.Compose(action, conditions)
+
+Uni.Compose is used to build complex conditions made up of other conditions and other compositions.
 
 #####Composing sugar
 
@@ -21,16 +48,7 @@ Uni is a runner and composer of conditions.
 
 
 
-
-```js
-// most basic condition
-// useful for simple conditions and basic feature detection
-var isTrueTrue = Uni.Condition(true);
-
-// a simple feature detect
-var hasClassList = Uni.Condition('classList' in docElement);
-```
-
+###Example
 
 ```js
 
@@ -72,18 +90,6 @@ isHighDpi.once(function() {
 
 isGalleryExpanded.while(function() {
     // center modal
-});
-
-// most basic condition
-// useful for simple conditions and basic feature detection
-var isTrueTrue = Uni.Condition(true);
-
-// a simple feature detect
-var hasClassList = Uni.Condition('classList' in docElement);
-
-// could use for string changes as Uni Conditions are state machines.
-var currentHotWord = Uni.Condition(function() {
-    return API.get('hot-word'); 
 });
 
 
