@@ -3,7 +3,7 @@
 
 Uni is a runner and composer of state machines.  
 
-###Uni.Machine
+##Machine
 
 A Uni machine is a state machine that can respond to changes over time.  States can be determined by static setters or listen to other state machines
 
@@ -15,7 +15,7 @@ A basic sate machine is useful for simple conditions and basic feature detection
 var isTrueTrue = Uni.Machine(true);
 ```
 
-Uni machines are not restricted to booleans.  As state machines, they can keep track of any variable types, including strings or objects.
+State machines are not restricted to booleans, they can keep track of any variable types, including strings or objects.
 
 ```js
 var currentHotWord = Uni.Machine(function() {
@@ -24,6 +24,8 @@ var currentHotWord = Uni.Machine(function() {
 ```
 
 ####Machine(function, options)
+
+State Machines can also be functions that can be updated from external event listeners.  
 
 ```js
 var isMediaSmall = Uni.Machine(function(width) {
@@ -35,22 +37,149 @@ var isMediaLarge = Uni.Machine(function(width) {
 });
 ```
 
-####Machine(options)
+###Machine Instance API
+
+######Instance Setup
 
 ```js
-var isMediaMedium = Uni.Machine({
-    listenTo: [isMediaSmall, isMediaLarge],
-    onChange: function(small, large) {
-        return !small.value && !large.value;
-    }
+var hasEventListener = Uni.Machine('radEventListener' in window); // typo!
+var windowWidth = Uni.Machine(function() {
+    return window.innerWidth;
 });
 ```
 
-####Options
+####Setters
+
+#####set(value)
+
+```js
+hasEventListener.set('addEventListener' in window); // fix type
+```
+
+#####set(func)
+
+```js
+hasEventListener.set(function(win) {
+    return 'addEventListener' in win;
+});
+```
+
+#####update(args...)
+
+```js
+hasEventListener.update(window);
+windowWidth.update();
+```
+
+####Getters
+
+#####value
+
+```js
+hasEventListener.value; // ==> true
+windowWidth.value; // ==> 1000
+```
+
+#####nth(index)
+
+`first`, `prev`, `value` are all sugar aliases of the `nth` function.
+
+```js
+hasEventListener.nth(0); // ==> true
+windowWidth.nth(1); // ==> 995
+```
+
+#####history
+
+```js
+hasEventListener.history // ==> [true, true]
+windowWidth.history; // ==> [1000, 995, 994];
+```
+
+####Responders
+
+#####respond(func)
+
+```js
+
+isMediaSmall.respond(function() {
+    html.addClass('media-small');
+})
+```
 
 
+#####respond(value, func)
 
-###Uni.Compose(action, machines)
+```js
+
+windowWidth.respond(function() {
+    return this.value > 1140;    
+}, function() {
+    html.addClass('media-large');
+})
+```
+
+#####once(func)
+
+```js
+
+isMediaSmall.once(function() {
+    html.addClass('media-small');
+})
+```
+
+#####when(func)
+
+```js
+
+isMediaSmall.when(function() {
+    html.addClass('media-small');
+})
+```
+
+#####while(func)
+
+```js
+
+isMediaSmall.while(function() {
+    html.addClass('media-small');
+})
+
+
+####Listeners
+
+#####listenTo(func)
+
+```js
+
+isMediaSmall.listenTo(windowWidth);
+```
+
+#####addListener(name, func)
+
+```js
+
+isMediaSmall.addListener("change", function(value, prev) {
+    dom.text(value);
+});
+```
+
+
+#####addListener(name, func)
+
+```js
+
+isMediaSmall.removeListener("change");
+```
+
+#####Listener Events
+
+- `set`
+- `update`
+- `change`
+
+
+##Uni.Compose(action, machines)
 
 Uni.Compose is used to build complex machines.  Compositions are special machines that can build complex logic around other listened machines.
 
@@ -62,105 +191,6 @@ Uni.Compose is used to build complex machines.  Compositions are special machine
 
 
 
+##Static Methods
 
-
-###Example
-
-```js
-
-var isMediaSmall = Uni.Machine(function(width) {
-    return width < 600;
-});
-
-var isMediaLarge = Uni.Machine(function(width) {
-    return width > 1280;
-});
-
-var isPortrait = Uni.Machine(function(width, height) {
-    return width < height
-});
-
-var isHighDpi = Uni.Machine(function() {
-    // high dpi test
-});
-
-var isGalleryExpanded = Uni.Machine(function() {
-    return $('.gallery').hasClass('is-expanded');
-});
-
-var isMediaMedium = Uni.and(Uni.not(isMediaSmall), Uni.not(isMediaLarge));
-
-Uni.and(isMediaMedium, isPortait).when(function() {
-   // setup single column  
-   // destroy multi column
-});
-
-Uni.and(isMediaMedium, Uni.not(isPortait)).when(function() {
-   // setup multi column
-   // destroy single column  
-});
-
-isHighDpi.once(function() {
-    // update to highrez images
-});
-
-isGalleryExpanded.while(function() {
-    // center modal
-});
-
-
-
-// Machine Instance API
-instance.set(value)
-instance.test(args);
-
-// 
-instance.value;
-instance.prev;
-instance.first;
-instance.nth(number); // if val/prev are not enough
-instance.history; // ==> [value, prev, nth(2), nth(3), first]
-
-instance.respond(func);
-instance.once(func);
-instance.when(func);
-instance.while(func);
-
-instance.listenTo(anotherInstance); // runs test on listened instance test
-instance.addListener(name, func);
-instance.removeListener(name, func);
-
-instance.addListener('update', function(){ });
-instance.addListener('respond', function(){ });
-
-// Composition API
-Uni.Compose(command, args);
-
-// Commands:
-// - not
-// - and
-// - or
-// - equal
-
-// Composing sugar
-Uni.not()
-Uni.and()
-Uni.or()
-
-
-// Composition Plugin API
-Uni.addComposer(name, func);
-
-
-
-$(window).on('resize', function() {
-    var win = $(this);
-    var width = win.innerWidth();
-    var height = win.innerHeight();
-
-    isMobile.test(width);
-    isPortraitMobile.test(width, height)
-});
-
-
-```
+####Uni.addComposer()
