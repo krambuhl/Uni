@@ -1,43 +1,58 @@
  Uni
 ===
 
-Uni is a runner and composer of conditions.  
+Uni is a runner and composer of state machines.  
 
-###Uni.Condition
+###Uni.Machine
 
-####Condition(value[, options])
+A Uni machine is a state machine that can respond to changes over time.  States can be determined by static setters or listen to other state machines
 
-A basic condition is useful for simple conditions and basic feature detection:
+####Machine(value, options)
+
+A basic sate machine is useful for simple conditions and basic feature detection:
 
 ```js
-var isTrueTrue = Uni.Condition(true);
+var isTrueTrue = Uni.Machine(true);
 ```
 
-Uni conditions are not restricted to booleans.  As state machines, they can keep track of any variable types, including strings or objects.
+Uni machines are not restricted to booleans.  As state machines, they can keep track of any variable types, including strings or objects.
 
 ```js
-var currentHotWord = Uni.Condition(function() {
+var currentHotWord = Uni.Machine(function() {
     return API.get('hot-word'); 
 });
 ```
 
-
-####Condition(function[, options])
-
+####Machine(function, options)
 
 ```js
-var isMediaSmall = Uni.Condition(function(width) {
+var isMediaSmall = Uni.Machine(function(width) {
     return width < 600;
 });
 
-var isMediaLarge = Uni.Condition(function(width) {
+var isMediaLarge = Uni.Machine(function(width) {
     return width > 1280;
 });
 ```
 
-###Uni.Compose(action, conditions)
+####Machine(options)
 
-Uni.Compose is used to build complex conditions made up of other conditions and other compositions.
+```js
+var isMediaMedium = Uni.Machine({
+    listenTo: [isMediaSmall, isMediaLarge],
+    onChange: function(small, large) {
+        return !small.value && !large.value;
+    }
+});
+```
+
+####Options
+
+
+
+###Uni.Compose(action, machines)
+
+Uni.Compose is used to build complex machines.  Compositions are special machines that can build complex logic around other listened machines.
 
 #####Composing sugar
 
@@ -48,27 +63,28 @@ Uni.Compose is used to build complex conditions made up of other conditions and 
 
 
 
+
 ###Example
 
 ```js
 
-var isMediaSmall = Uni.Condition(function(width) {
+var isMediaSmall = Uni.Machine(function(width) {
     return width < 600;
 });
 
-var isMediaLarge = Uni.Condition(function(width) {
+var isMediaLarge = Uni.Machine(function(width) {
     return width > 1280;
 });
 
-var isPortrait = Uni.Condition(function(width, height) {
+var isPortrait = Uni.Machine(function(width, height) {
     return width < height
 });
 
-var isHighDpi = Uni.Condition(function() {
+var isHighDpi = Uni.Machine(function() {
     // high dpi test
 });
 
-var isGalleryExpanded = Uni.Condition(function() {
+var isGalleryExpanded = Uni.Machine(function() {
     return $('.gallery').hasClass('is-expanded');
 });
 
@@ -94,7 +110,7 @@ isGalleryExpanded.while(function() {
 
 
 
-// Condition Instance API
+// Machine Instance API
 instance.set(value)
 instance.test(args);
 
