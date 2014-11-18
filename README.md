@@ -140,10 +140,10 @@ isMediaSmall.when(function() {
 #####while(func)
 
 ```js
-
 isMediaSmall.while(function() {
     html.addClass('media-small');
 })
+```
 
 
 ####Listeners
