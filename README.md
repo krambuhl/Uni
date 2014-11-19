@@ -5,7 +5,7 @@ Uni is a runner and composer of state machines.
 
 ##Machine
 
-A Uni machine is a state machine that can respond to changes over time.  States can be determined by static setters or listen to other state machines
+A Uni machine is a state machine that can respond to changes over time.  States can be determined by setters or by listening to other machines.
 
 ####Machine(value, options)
 
@@ -50,17 +50,19 @@ var windowWidth = Uni.Machine(function() {
 
 ####Setters
 
+There are multiple ways of setting and updating the state of a Uni Machine.  `set` can create a new record or configure a function to be called from the `update` method.
+
 #####set(value)
 
 ```js
-hasEventListener.set('addEventListener' in window); // fix type
+hasEventListener.set('addEventListener' in window); // fix typo
 ```
 
 #####set(func)
 
 ```js
-hasEventListener.set(function(win) {
-    return 'addEventListener' in win;
+hasEventListener.set(function(object) {
+    return 'addEventListener' in object;
 });
 ```
 
@@ -73,7 +75,11 @@ windowWidth.update();
 
 ####Getters
 
+Machines provide a number of ways to access current and historical data.  `value`, `prev`, `first`, and `history` are static properties, while the `nth` and `get` methods are available for more intricate retrieval.
+
 #####value
+
+Returns the current state of the Machine.  If no state has been determined returns `undefined`
 
 ```js
 hasEventListener.value; // ==> true
@@ -82,7 +88,13 @@ windowWidth.value; // ==> 1000
 
 #####nth(index)
 
-`first`, `prev`, `value` are all sugar aliases of the `nth` function.
+nth returns a single record based on an index.
+
+```js
+var value = windowWidth.nth(0);
+var prev  = windowWidth.nth(1);
+var first = windowWidth.nth(history.length);
+```
 
 ```js
 hasEventListener.nth(0); // ==> true
@@ -90,6 +102,8 @@ windowWidth.nth(1); // ==> 995
 ```
 
 #####history
+
+Available history of the Machine, sorted with the newest state first.  Different types 
 
 ```js
 hasEventListener.history // ==> [true, true]
