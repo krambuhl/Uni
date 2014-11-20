@@ -1,4 +1,4 @@
- Uni
+Uni
 ===
 
 Uni is a runner and composer of state machines.  
@@ -18,9 +18,7 @@ var isTrueTrue = Uni.Machine(true);
 State machines are not restricted to booleans, they can keep track of any variable types, including strings or objects.
 
 ```js
-var currentHotWord = Uni.Machine(function() {
-    return API.get('hot-word'); 
-});
+var currentHotWord = Uni.Machine(API.get('hot-word'));
 ```
 
 ####Machine(function, options)
@@ -28,6 +26,10 @@ var currentHotWord = Uni.Machine(function() {
 State Machines can also be functions that can be updated from external event listeners.  
 
 ```js
+var currentHotWord = Uni.Machine(function() {
+    return API.get('hot-word'); 
+});
+
 var isMediaSmall = Uni.Machine(function(width) {
     return width < 600;
 });
@@ -111,6 +113,8 @@ windowWidth.history; // ==> [1000, 995, 994];
 ```
 
 ####Responders
+
+Responders define methods of listening to machine state changes.
 
 #####respond(func)
 
