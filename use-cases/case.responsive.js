@@ -1,31 +1,31 @@
 Uni.cache('win', $(window));
 
 // Machines
-var screenSize = Uni.Machine(function() {
+var windowSize = Uni.Machine(function() {
   return {
     width: Uni.cache('win').innerWidth(),
     height: Uni.cache('win').innerHeight()
   };
 }).listenTo(Uni.cache('win'), 'resize');
 
-var screenRatio = Uni.Machine(function(data) {
+var windowRatio = Uni.Machine(function(data) {
   return data.width / data.height;
-}).listenTo(screenSize);
+}).listenTo(windowSize);
 
 // Conditions & Compositions
 
-// Screen Size
-var isNarrowScreen = Uni.Condition(function(size) {
+// Window Size
+var isNarrowSize = Uni.Condition(function(size, mach) {
   return size.width < 640;
 });
 
-var isWideScreen = Uni.Condition(function(size) {
+var isWideSize = Uni.Condition(function(size) {
   return size.width > 1140;
 });
 
-var isNormalScreen = Uni.and(Uni.not(isNarrowScreen), Uni.not(isWideScreen));
+var isNormalSize = Uni.and(Uni.not(isNarrowSize), Uni.not(isWideSize));
 
-// Screen Ratio
+// Window Ratio
 var isPortraitRatio = Uni.Condition(function(ratio) {
   return ratio > 1;
 });
@@ -33,6 +33,9 @@ var isPortraitRatio = Uni.Condition(function(ratio) {
 var isLandscapeRatio = Uni.not(isPortraitRatio);
 
 
-Uni.respond(screenWidth, isNormalScreen, function(mach, cond) { });
-Uni.respond(screenWidth, isNormalScreen, function(mach, cond) { });
-Uni.respond(screenWidth, isPortraitRatio, function(mach, cond) { });
+// Responders
+
+Uni.Respond(windowSize, isNarrowSize, function() {});
+Uni.Respond(windowSize, isNormalSize, function() {});
+Uni.Respond('once', windowRatio, isPortraitRatio, function() {});
+Uni.Respond('while', windowRatio, isLandscapeRatio, function() {});
