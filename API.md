@@ -18,6 +18,7 @@ Uni.and(conditions...)
 Uni.or(conditions...)
 
 //Uni.Respond sugar
+Uni.respond(machine, func)
 Uni.once(machine, func)
 Uni.when(machine, func)
 Uni.while(machine, func)
