@@ -22,4 +22,5 @@ var hasCookies = Uni.Condition(function() {
 var hasRequirements = Uni.and(hasCanvas, hasCookies, hasGeoLoc);
 
 // Responders
-Uni.Respond(hasRequirements, function() { });
+Uni.Respond(hasRequirements)
+  .now(function() {});

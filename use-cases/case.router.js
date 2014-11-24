@@ -19,8 +19,7 @@ var isRouteChanged = Uni.Conditions(function(hash, mach) {
   return mach.value !== mach.prev;
 })
 
-
 // Responders
-Uni.Respond(router).change(function(hash, mach) {
+Uni.Respond(router).while(isRouteChanged, function(hash, mach) {
   console.log('route', hash);
 });
