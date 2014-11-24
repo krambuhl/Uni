@@ -1,4 +1,6 @@
-var isMediaSmall = Uni.Condition(function(width) {
+var isMediaSmall = Uni.Condition({ 
+  
+}, function(width) {
     return width < 600;
 });
 

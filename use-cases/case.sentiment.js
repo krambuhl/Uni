@@ -18,7 +18,9 @@ var isNeutralSentiment = Uni.Conditions(function(tweet) {
   return sentiment(tweet) === 0;
 });
 
+
 // Responders
-Uni.Respond('when', newestTweet, isPositiveSentiment, function() { });
-Uni.Respond('when', newestTweet, isNegativeSentiment, function() { });
-Uni.Respond('when', newestTweet, isNeutralSentiment, function() { });
+Uni.Respond(newestTweet)
+  .when(isPositiveSentiment, function() {})
+  .when(isNegativeSentiment, function() {})
+  .when(isNeutralSentiment, function() {});
